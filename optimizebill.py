@@ -6,23 +6,22 @@ import matplotlib.pyplot as plt
 
 
 class electricbilloptimizer:
-    def __init__(self, ncars=4, charger_min=0, charger_max=7, trf_i1=36, trfi2=64,
+    def __init__(self, ncars=4, charger_min=0, charger_max=7, trf_i1=36, trf_i2=64,
                  car_energy_low=25, car_energy_high=35, remaining_energy=5, buildingload='./data/buildingload.csv',
-                 seed=41, ecar=None):
+                 seed=41, ecars=None):
 
         self.ncars = ncars
-        self.charger_min = 0
-        self.charger_max = 7
-        self.trf_i1 = 36
-        self.trf_i2 = 64
-        self.car_energy_low = 15.
-        self.car_energy_high = 35.
-        self.energy_remained = 5.
+        self.charger_min = charger_min
+        self.charger_max = charger_max
+        self.trf_i1 = trf_i1
+        self.trf_i2 = trf_i2
+        self.car_energy_low = car_energy_low
+        self.car_energy_high = car_energy_high
+        self.energy_remained = remaning_energy
         self.buildingload = self.read_buildingload(buildingload)
         self.seed = 41
-        # Add the index to time ratio
 
-        if ecar is None:
+        if ecars is None:
             self.ecars = self.energy_to_be_loaded()
 
     def get_time(self):
