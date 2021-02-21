@@ -1,3 +1,4 @@
+import argparse
 import numpy as np
 import pandas as pd
 from scipy import optimize
@@ -7,7 +8,7 @@ import matplotlib.pyplot as plt
 
 class electricbilloptimizer:
     def __init__(self, ncars=4, charger_min=0, charger_max=7, trf_i1=36, trf_i2=64,
-                 car_energy_low=25, car_energy_high=35, remaining_energy=5, buildingload='./data/buildingload.csv',
+                 car_energy_low=15, car_energy_high=35, remaining_energy=5, buildingload='./data/buildingload.csv',
                  seed=41, ecars=None):
 
         self.ncars = ncars
@@ -17,8 +18,9 @@ class electricbilloptimizer:
         self.trf_i2 = trf_i2
         self.car_energy_low = car_energy_low
         self.car_energy_high = car_energy_high
-        self.energy_remained = remaning_energy
+        self.energy_remained = remaining_energy
         self.buildingload = self.read_buildingload(buildingload)
+        self.eps = 1e-14
         self.seed = 41
 
         if ecars is None:
@@ -72,7 +74,7 @@ class electricbilloptimizer:
         return constraints
 
     def generate_bounds(self):
-        return ((((0, 1e-12),) * 40 + ((self.charger_min, self.charger_max),) * 56)) * self.ncars
+        return ((((0, self.eps),) * 40 + ((self.charger_min, self.charger_max),) * 56)) * self.ncars
 
     def optimize(self):
         p0 = self.make_initial_guess()
@@ -81,10 +83,10 @@ class electricbilloptimizer:
 
         self.res = optimize.minimize(self.bill, x0=p0, bounds=bounds, constraints=constraints)
         print(self.res['message'])
-        print(f"Bill: $%f" % self.res['fun'])
+        print(r"Bill: $%f" % self.res['fun'])
         return self.res
 
-    def plot_result(self, save=False):
+    def plot_result(self):
         time = self.get_time()
         bl = self.get_buildingload()
 
@@ -92,24 +94,34 @@ class electricbilloptimizer:
         for i in range(self.ncars):
             label = 'Car-' + str(i)
             plt.plot(time, self.res.x[i * 96: (i + 1) * 96], label=label)
-        plt.plot(time, self.res.x.reshape(-1, 96).sum(0), label='Total')
+        plt.plot(time, self.res.x.reshape(-1, 96).sum(0), label='All Cars')
         plt.plot(time, bl[:96], label='Buildingload')
         plt.xlabel('Time')
         plt.ylabel('Power (kW)')
         plt.ylim(0, 30)
         plt.legend(loc=0)
         plt.tight_layout()
-        if save:
-            plt.savefig("loadcomponents.eps", format="eps")
-        else:
-            plt.show()
+        plt.savefig("./Results/Results.png", format="png", dpi=300)
+
+    def save_results(self):
+        df1 = self.buildingload['Timestamp']
+        df2 = pd.DataFrame(self.res.x.reshape(-1, self.ncars),
+                           columns=['Charger1[kW]', 'Charger2[kW]', 'Charger3[kW]', 'Charger4[kW]'])
+        df1 = pd.concat([df1, df2], axis=1)
+        df1.to_csv('./Results/dispatch.csv', index=False)
 
 
-def main():
+def main(plot):
     eoptimize = electricbilloptimizer()
     eoptimize.optimize()
-    eoptimize.plot_result()
+    eoptimize.save_results()
+    if plot:
+        eoptimize.plot_result()
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--plot', help='Plot the power used by each component.')
+    args = parser.parse_args()
+
+    main(plot=args.plot)
