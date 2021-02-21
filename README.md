@@ -39,7 +39,7 @@ This code writes the results in a file named dispatch.csv with the following hea
 
 ### Problem Formulation
 
-Problem formulation is available in formulation.ipynb notebook.
+Problem formulation is available in the formulation.pdf file.
 
 
 
