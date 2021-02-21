@@ -24,4 +24,4 @@ Given the problem setting above, what would be the power used in each charger fo
 
 ### Solution:
 
-The complete solution of the problem is given in the `optimizebill.py` file.
+The complete solution to the problem is given in the `optimizebill.py` file.
