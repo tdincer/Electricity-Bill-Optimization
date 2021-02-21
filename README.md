@@ -2,7 +2,7 @@
 Electricity bill optimization of a customer with 4 electric vehicles
 
 
-## Problem:
+### Problem:
 
 The challenge is to optimize the electricity bill of a customer with 4 electric vehicles. Each vehicle has a battery of 40 kWh. The customer has four Level-2 charging stations (one for each vehicle) with a maximum charging rate of 7kW. Assume that each charger’s charging rate could be set to any float value between 0 and 7 kW. The on-board AC-DC converter in each vehicle has an efficiency of 70% for charging rates below 5kW and 90% for charging rates above 5kW.
 
