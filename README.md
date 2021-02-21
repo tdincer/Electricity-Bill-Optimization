@@ -6,7 +6,9 @@ The problem is to optimize the electricity bill of a customer with 4 electric ve
 
 The chargers are located behind the utility grade meter. The figure below depicts the site configuration.
 
-![Site Configuration](https://github.com/tdincer/Electricity-Bill-Optimization/blob/main/siteconfiguration.png)
+<p align="center">
+  <img src=https://github.com/tdincer/Electricity-Bill-Optimization/blob/main/siteconfiguration.png width="350" alt="accessibility text">
+</p>
 
 The customer’s electricity bill is based on the total site load measured at the utility grade meter. The buildingload data for a representative day is available in buildingload.csv file with the following headers: Timestamp, BuildingLoad[kW].
 
