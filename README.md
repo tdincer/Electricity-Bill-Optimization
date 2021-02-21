@@ -4,7 +4,11 @@
 
 The problem is to optimize the electricity bill of a customer with 4 electric vehicles. Each vehicle has a battery of 40 kWh. The customer has four Level-2 charging stations (one for each vehicle) with a maximum charging rate of 7kW. Assume that each charger’s charging rate could be set to any float value between 0 and 7 kW. The on-board AC-DC converter in each vehicle has an efficiency of 70% for charging rates below 5kW and 90% for charging rates above 5kW.
 
-The chargers are located behind the utility grade meter. The customer’s electricity bill is based on the total site load measured at the utility grade meter.
+The chargers are located behind the utility grade meter. The figure below depicts the site configuration.
+
+![Site Configuration](https://github.com/tdincer/Electricity-Bill-Optimization/blob/main/siteconfiguration.png)
+
+The customer’s electricity bill is based on the total site load measured at the utility grade meter. The buildingload data for a representative day is available in buildingload.csv file with the following headers: Timestamp, BuildingLoad[kW].
 
 The customer’s electricity tariff is described below:
 
@@ -18,4 +22,4 @@ Given the problem setting above, what would be the power used in each charger fo
 
 ### Solution:
 
-The complete solution of the problem is given in the `optimize.py` file.
+The complete solution of the problem is given in the `optimizebill.py` file.
