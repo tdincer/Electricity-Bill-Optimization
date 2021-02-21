@@ -15,7 +15,7 @@ class electricbilloptimizer:
         self.charger_max = 7
         self.trf_i1 = 36
         self.trf_i2 = 64
-        self.car_energy_low = 25.
+        self.car_energy_low = 15.
         self.car_energy_high = 35.
         self.energy_remained = 5.
         self.buildingload = self.read_buildingload(buildingload)
