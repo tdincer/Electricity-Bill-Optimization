@@ -15,3 +15,7 @@ The customer’s electricity tariff is described below:
 Assume that each vehicle departs at midnight (12:00AM) and arrives at 10:00AM with 5kWh energy left in its battery. At the time of departure, the required energy for individual vehicles follows the uniform distribution U(15, 35). By contract, 95% of all of the daily trips must be successfully completed without the need to charge the vehicles before their return to the site.
 
 Given the problem setting above, what would be the power used in each charger for the minimum electricity bill?
+
+### Solution:
+
+The complete solution of the problem is given in the `optimize.py` file.
