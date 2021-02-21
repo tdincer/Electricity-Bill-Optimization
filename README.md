@@ -57,7 +57,8 @@ This code writes the results in a file named dispatch.csv with the following hea
 
 `E_{j}`: Energy required for a given car (kWh).
 
-DC: Demand cost for the maximum power used during the day, which is given as 16 $/kW.
+`DC`: Demand cost for the maximum power used during the day, which is given as 16 $/kW.
+
 $$
 \bold{minimize} \left( Bill = \sum_{i=0}^{95} \sum_{j=0}^{3} (P_{i,j} + BL_i) . Trf_i . t_i + max(\sum_{j=0}^{3} P_{i,j} + BL_i) . DC \right)
 $$
