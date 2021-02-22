@@ -23,23 +23,29 @@ Given the problem setting above, what would be the power used in each charger fo
 
 
 
+### Problem Formulation
+
+Problem formulation is available in the [formulation.pdf](./formulation.pdf) file.
+
+
+
 ### Code
 
-The complete solution to the problem is given in the `optimizebill.py` file.
-
-To run the code:
+The complete solution to the problem is given in the `optimizebill.py` file. You can clone the repository and run the code from the root directory. E.g.
 
 ```python
 python3 optimizebill.py
 ```
 
-This code writes the results in a file named dispatch.csv with the following headers: *Timestamp, Charger1[kW], Charger2[kW], Charger3[kW], Charger4[kW]*.
+The code writes the results in a file named dispatch.csv with the following headers: *Timestamp, Charger1[kW], Charger2[kW], Charger3[kW], Charger4[kW]*.
 
 
 
-### Problem Formulation
+### Requirements
 
-Problem formulation is available in the formulation.pdf file.
+Python 3.6+ is required.
+
+The following should install all requirements `pip install numpy pandas scipy matplotlib`.
 
 
 
