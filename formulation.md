@@ -1,12 +1,14 @@
 ### Problem Formulation
 
-$i$: Index for each 15 min chunk of a day. There are 96 chunks of 15 min in a day. So, i goes from 0 to 95.
+#### Sets
+
+$I$= {$i$ | $i$ is an integer, and 0 $\leq$ i $\leq$ 96 }. Set of time chunks in a given day
+
+$J$: {$j$ | $j$ is an integer, and 0 $\leq$ j $\leq$ 3 }. Set of cars/chargers.
+
+#### Parameters
 
 $t_i$: Time interval for a given chunk of the day, which is 15 min = 1/4 hr.
-
-$j$: Car index.
-
-$P_{i,j}$: Power used from any charger at a given 15 min chunk (kW).
 
 $Trf_i$: Customer's electricity tariff at a given 15 min chunk ($/kWh).
 
@@ -20,16 +22,18 @@ $E_{j}$: Energy required for a given car (kWh).
 
 $DC$: Demand cost for the maximum power used during the day, which is given as 16 $/kW.
 
+#### Variables
+
+$P_{i,j}$: Power used from any charger at a given 15 min chunk (kW).
+
+#### Objective
+
 
 $$
-{minimize} \left( Bill = \sum_{i=0}^{95} \sum_{j=0}^{3} (P_{i,j} + BL_i) . Trf_i . t_i + max(\sum_{j=0}^{3} P_{i,j} + BL_i) . DC \right)
+{min}(Bill) =  \left( \sum_{i=0}^{95} \sum_{j=0}^{3} (P_{i,j} + BL_i) . Trf_i . t_i + max(\sum_{j=0}^{3} P_{i,j} + BL_i) . DC \right)
 $$
 
-<center> S.T. </center>
-
-$$
-0 < P_{i,j} < 7
-$$
+#### Constraints
 
 $$
 Trf_i = 
@@ -55,6 +59,8 @@ $$
 E_{j} <  B_{j} = 40
 $$
 
+#### Boundaries
+
 $$
 P_{i,j} = 
 \begin{cases}
@@ -62,4 +68,6 @@ P_{i,j} =
   [0, 7]   & otherwise       \\
 \end{cases}
 $$
+
+
 
