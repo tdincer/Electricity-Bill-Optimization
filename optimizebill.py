@@ -48,6 +48,8 @@ class electricbilloptimizer:
 
         if ecars is None:
             self.ecars = self.energy_to_be_loaded()
+        else:
+            self.ecars = ecars - self.energy_remained
 
     def get_time(self):
         return self.buildingload['Timestamp'].values
@@ -132,7 +134,6 @@ class electricbilloptimizer:
             if self.time_offsite2:
                 p = np.concatenate([p, np.zeros(self.time_offsite2)])
             plt.plot(time, p, label=label)
-        #plt.plot(time, self.res.x.reshape(-1, 96).sum(0), label='All Cars')
         plt.plot(time, bl, label='Buildingload')
         plt.xlabel('Time')
         plt.ylabel('Power (kW)')
@@ -150,9 +151,10 @@ class electricbilloptimizer:
         if self.time_offsite2:
             data = np.concatenate([data, np.zeros((self.time_offsite2, self.ncars))])
         df2 = pd.DataFrame(data,
-                           columns=['Charger%d[kW]' for i in range(self.ncars)])
+                           columns=['Charger{}[kW]'.format(i) for i in range(self.ncars)])
         df1 = pd.concat([df1, df2], axis=1)
         df1.to_csv('./Results/dispatch.csv', index=False)
+
 
 @timer
 def main(ncars, seed, plot):
