@@ -18,19 +18,19 @@ $Eff_{j}$: Efficiency of the AC/DC converter in each car.
 
 $B_j$: Battery capacity of each car (kWh).
 
-$E_{j}$: Energy required for a given car (kWh).
+$E_{j}$: Energy demand of each car (kWh).
 
 $DC$: Demand cost for the maximum power used during the day, which is given as 16 $/kW.
 
 #### Variables
 
-$P_{i,j}$: Power used from any charger at a given 15 min chunk (kW).
+$P_{i,j}$: Load on a charger at a given 15 min chunk (kW).
 
 #### Objective
 
 
 $$
-{min}(Bill) =  \left( \sum_{i=0}^{95} \sum_{j=0}^{3} (P_{i,j} + BL_i) . Trf_i . t_i + max(\sum_{j=0}^{3} P_{i,j} + BL_i) . DC \right)
+{minimum\left( Bill =   \sum_{i=0}^{95} \sum_{j=0}^{3} (P_{i,j} + BL_i) . Trf_i . t_i + max(\sum_{j=0}^{3} P_{i,j} + BL_i) . DC \right)}
 $$
 
 #### Constraints
@@ -38,8 +38,8 @@ $$
 $$
 Trf_i = 
 \begin{cases}
-  0.4   & if & 9AM < t_i < 4PM \\
-  0.1   & otherwise       \\
+  0.4 & if & 9AM < t_i < 4PM \\
+  0.1 & otherwise       \\
 \end{cases}
 $$
 
@@ -52,11 +52,11 @@ Eff_{i, j} =
 $$
 
 $$
-E_{j} = \sum_{i=0}^{55} P_{i, j} . Eff_{i, j} = U(15, 35)_{j} - 5
+E_{j} = \sum_{i=0}^{55} P_{i, j} . Eff_{i, j} . t_i = U(15, 35)_{j} - 5
 $$
 
 $$
-E_{j} <  B_{j} = 40
+U(15,35)_{j} + 5 <  B_{j} = 40
 $$
 
 #### Boundaries
