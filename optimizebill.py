@@ -1,3 +1,4 @@
+import os
 import time
 import argparse
 import functools
@@ -86,7 +87,8 @@ class electricbilloptimizer:
         if ecars is None:
             self.ecars = self.energy_to_be_loaded()
         else:
-            self.ecars = ecars - self.energy_remained
+            self.ecars = np.asarray(ecars) - self.energy_remained
+            self.ncars = len(ecars)
 
     def get_time(self):
         """
@@ -227,7 +229,7 @@ class electricbilloptimizer:
         print(r"Bill: $%f" % self.res['fun'])
         return self.res
 
-    def plot_result(self):
+    def plot_result(self, showplot=True):
         time = self.get_time()
         bl = self.get_buildingload()
 
@@ -248,8 +250,10 @@ class electricbilloptimizer:
         plt.legend(loc=0)
         plt.tight_layout()
         plt.savefig("./Results/Results.png", format="png", dpi=300)
+        if showplot:
+            plt.show()
 
-    def save_results(self):
+    def make_output(self):
         df1 = self.buildingload['Timestamp']
 
         data = self.res.x.reshape(-1, self.ncars)
@@ -260,24 +264,29 @@ class electricbilloptimizer:
         df2 = pd.DataFrame(data,
                            columns=['Charger{}[kW]'.format(i) for i in range(self.ncars)])
         df1 = pd.concat([df1, df2], axis=1)
+        return df1
+
+    def save_results(self):
+        if ~os.path.isfile('./Results'):
+            os.mkdir('./Results')
+        df1 = self.make_output()
         df1.to_csv('./Results/dispatch.csv', index=False)
 
 
 @timer
-def main(ncars, seed, plot):
+def main(ncars, seed, showplot):
     eoptimize = electricbilloptimizer(ncars=ncars)
     eoptimize.optimize()
     eoptimize.save_results()
-    if plot:
-        eoptimize.plot_result()
+    eoptimize.plot_result(showplot)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--plot', type=bool, default=True, help='Plot the power used by each component.')
+    parser.add_argument('-sp', '--showplot', type=bool, default=False, help='Plot the power used by each component.')
     parser.add_argument('-nc', '--ncars', type=int, default=4, help='Number of cars.')
     parser.add_argument('-s', '--seed', type=int, default=41, help='Seed to generate the power needed by cars.')
 
     args = parser.parse_args()
 
-    main(ncars=args.ncars, seed=args.seed, plot=args.plot)
+    main(ncars=args.ncars, seed=args.seed, showplot=args.showplot)
