@@ -39,13 +39,13 @@ python3 optimizebill.py
 
 The code writes the results in a file named dispatch.csv with the following headers: *Timestamp, Charger1[kW], Charger2[kW], Charger3[kW], Charger4[kW]*.
 
+![](/Users/tdincer/Desktop/eiqmobilitychallange/Electricity-Bill-Optimization/Results/Results.png)
+
 
 
 ### Requirements
 
-Python 3.6+ is required.
-
-The following should install all requirements `pip install numpy pandas scipy matplotlib`.
+Python 3.6+ is required. See also [requirements.txt](./requirements.txt) file.
 
 
 
