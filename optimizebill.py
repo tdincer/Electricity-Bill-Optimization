@@ -267,7 +267,7 @@ class electricbilloptimizer:
         return df1
 
     def save_results(self):
-        if ~os.path.isfile('./Results'):
+        if not os.path.isdir('./Results'):
             os.mkdir('./Results')
         df1 = self.make_output()
         df1.to_csv('./Results/dispatch.csv', index=False)
