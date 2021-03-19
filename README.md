@@ -37,7 +37,7 @@ The complete solution to the problem is given in the `optimizebill.py` file. You
 python3 optimizebill.py
 ```
 
-The code writes the results in a file named dispatch.csv with the following headers: *Timestamp, Charger1[kW], Charger2[kW], Charger3[kW], Charger4[kW]*. It also plots the results as shown below:
+The code writes the results in a file named dispatch.csv with the following headers: *Timestamp, Charger0[kW], Charger1[kW], Charger2[kW], Charger3[kW]*. It also plots the results as shown below:
 
 ![](./Results/Results.png)
 
