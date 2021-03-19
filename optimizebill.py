@@ -256,12 +256,12 @@ class electricbilloptimizer:
     def make_output(self):
         df1 = self.buildingload['Timestamp']
 
-        data = self.res.x.reshape(-1, self.ncars)
+        data = self.res.x.reshape(self.ncars, -1)
         if self.time_offsite1:
-            data = np.concatenate([np.zeros((self.time_offsite1, self.ncars)), data])
+            data = np.concatenate([np.zeros((self.ncars, self.time_offsite1)), data], axis=1)
         if self.time_offsite2:
-            data = np.concatenate([data, np.zeros((self.time_offsite2, self.ncars))])
-        df2 = pd.DataFrame(data,
+            data = np.concatenate([data, np.zeros((self.ncars, self.time_offsite2))], axis=1)
+        df2 = pd.DataFrame(data.T,
                            columns=['Charger{}[kW]'.format(i) for i in range(self.ncars)])
         df1 = pd.concat([df1, df2], axis=1)
         return df1
