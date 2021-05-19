@@ -1,4 +1,4 @@
-Timestamp,Charger0[kW],Charger1[kW],Charger2[kW],Charger3[kW]
+Timestamp,Charger1[kW],Charger2[kW],Charger3[kW],Charger4[kW]
 2019-01-05 00:00:00,0.0,0.0,0.0,0.0
 2019-01-05 00:15:00,0.0,0.0,0.0,0.0
 2019-01-05 00:30:00,0.0,0.0,0.0,0.0

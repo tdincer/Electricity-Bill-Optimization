@@ -38,7 +38,7 @@ $$
 $$
 Trf_i = 
 \begin{cases}
-  0.4 & if & 9AM < t_i < 4PM \\
+  0.4 & if & 9AM < Time < 4PM \\
   0.1 & otherwise       \\
 \end{cases}
 $$
@@ -64,7 +64,7 @@ $$
 $$
 P_{i,j} = 
 \begin{cases}
-  0   & if & 12AM < t_i < 10AM \\
+  0   & if & 12AM < Time < 10AM \\
   [0, 7]   & otherwise       \\
 \end{cases}
 $$

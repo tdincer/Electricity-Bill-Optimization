@@ -7,6 +7,8 @@ import pandas as pd
 from scipy import optimize
 from functools import partial
 import matplotlib.pyplot as plt
+import matplotlib.units as munits
+import matplotlib.dates as mdates
 
 
 def timer(func):
@@ -26,7 +28,7 @@ class electricbilloptimizer:
     """
     A class to optimize electricity bill of a customer with N cars.
     """
-    def __init__(self, ncars=4, charger_min=0, charger_max=7, trf_i1=36, trf_i2=64,
+    def __init__(self, ncars=4, charger_min=0., charger_max=7, trf_i1=36, trf_i2=64,
                  car_edemand_min=15, car_edemand_max=35, remaining_energy=5, buildingload='./data/buildingload.csv',
                  seed=41, ecars=None, arrival_time=40, departure_time=96, demand_cost=16, bintohour=0.25):
         """
@@ -230,25 +232,37 @@ class electricbilloptimizer:
         return self.res
 
     def plot_result(self, showplot=True):
+        converter = mdates.ConciseDateConverter()
+        munits.registry[np.datetime64] = converter
+
+        fig, ax = plt.subplots(figsize=(8, 3.5), constrained_layout=True)
+
         time = self.get_time()
         bl = self.get_buildingload()
 
-        plt.figure(figsize=(9, 4))
+        ps = {}
+        ps['Buildingload'] = bl
+
+        # plt.figure(figsize=(9, 4))
         for i in range(self.ncars):
-            label = 'Charger-' + str(i)
+            label = 'Charger-' + str(i + 1)
 
             p = self.res.x[i * self.time_onsite: (i + 1) * self.time_onsite]
             if self.time_offsite1:
                 p = np.concatenate([np.zeros(self.time_offsite1), p])
             if self.time_offsite2:
                 p = np.concatenate([p, np.zeros(self.time_offsite2)])
-            plt.plot(time, p, label=label)
-        plt.plot(time, bl, label='Buildingload')
+            ps[label] = p
+
+        ax.stackplot(time, ps.values(), labels=ps.keys())
+        ax.legend(loc='upper left', prop={'size': 6})
         plt.xlabel('Time')
         plt.ylabel('Power (kW)')
-        plt.ylim(0, 30)
-        plt.legend(loc=0)
-        plt.tight_layout()
+        plt.ylim(0, 35)
+
+        fmt_half_year = mdates.HourLocator(interval=2)
+        ax.xaxis.set_major_locator(fmt_half_year)
+
         plt.savefig("./Results/Results.png", format="png", dpi=300)
         if showplot:
             plt.show()
@@ -262,7 +276,7 @@ class electricbilloptimizer:
         if self.time_offsite2:
             data = np.concatenate([data, np.zeros((self.ncars, self.time_offsite2))], axis=1)
         df2 = pd.DataFrame(data.T,
-                           columns=['Charger{}[kW]'.format(i) for i in range(self.ncars)])
+                           columns=['Charger{}[kW]'.format(i + 1) for i in range(self.ncars)])
         df1 = pd.concat([df1, df2], axis=1)
         return df1
 
