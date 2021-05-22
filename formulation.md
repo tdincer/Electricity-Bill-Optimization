@@ -59,6 +59,16 @@ $$
 U(15,35)_{j} + 5 <  B_{j} = 40
 $$
 
+$$
+P_{i,j} = 
+\begin{cases}
+  0   & if & 10AM < Time < 12PM \\
+  P_{i, j}   & otherwise       \\
+\end{cases}
+$$
+
+
+
 #### Boundaries
 
 $$
