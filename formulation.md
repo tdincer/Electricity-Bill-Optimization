@@ -43,6 +43,7 @@ Trf_i =
 \end{cases}
 $$
 
+
 $$
 Eff_{i, j} =
 \begin{cases}
@@ -51,9 +52,11 @@ Eff_{i, j} =
 \end{cases}
 $$
 
+
 $$
 E_{j} = \sum_{i=0}^{55} P_{i, j} . Eff_{i, j} . t_i = U(15, 35)_{j} - 5
 $$
+
 
 $$
 U(15,35)_{j} + 5 <  B_{j} = 40
