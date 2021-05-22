@@ -30,7 +30,7 @@ $P_{i,j}$: Load on a charger at a given 15 min chunk (kW).
 
 
 $$
-{minimum\left( Bill =   \sum_{i=0}^{95} \sum_{j=0}^{3} (P_{i,j} + BL_i) . Trf_i . t_i + max(\sum_{j=0}^{3} P_{i,j} + BL_i) . DC \right)}
+{minimum\left( Bill = \left(\sum_{i=0}^{95} \sum_{j=0}^{3} (P_{i,j} + BL_i) . Trf_i . t_i\right) + max(\sum_{j=0}^{3} P_{i,j} + BL_i) . DC \right)}
 $$
 
 #### Constraints

@@ -29,8 +29,9 @@ class electricbilloptimizer:
     A class to optimize electricity bill of a customer with N cars.
     """
     def __init__(self, ncars=4, charger_min=0., charger_max=7, trf_i1=36, trf_i2=64,
-                 car_edemand_min=15, car_edemand_max=35, remaining_energy=5, buildingload='./data/buildingload.csv',
-                 seed=41, ecars=None, arrival_time=40, departure_time=96, demand_cost=16, bintohour=0.25):
+                 car_edemand_min=15, car_edemand_max=35, car_edemand=None, remaining_energy=5,
+                 buildingload='./data/buildingload.csv', seed=41, ecars=None, arrival_time=40,
+                 departure_time=96, demand_cost=16, bintohour=0.25):
         """
         Construct all the necessary atrributes for the bill optimizer.
 
@@ -50,6 +51,8 @@ class electricbilloptimizer:
                 Minimum of each car's energy demand distribution (kWh)
             car_edemand_max: float
                 Maximum of each car's energy demand distribution (kWh)
+            car_edamand: list
+                Energy demand of each car (kWh)
             remaining_energy: float
                 Energy remained in each car on arrival (kWh)
             ecars: np.array
@@ -73,6 +76,7 @@ class electricbilloptimizer:
         self.trf_i2 = trf_i2
         self.car_edemand_min = car_edemand_min
         self.car_edemand_max = car_edemand_max
+        self.car_edemand = car_edemand
         self.energy_remained = remaining_energy
         self.arrival_time = arrival_time
         self.departure_time = departure_time
@@ -122,7 +126,10 @@ class electricbilloptimizer:
             np.array: float array containing the energy demand of N cars.
         """
         np.random.seed(self.seed)
-        return np.random.uniform(self.car_edemand_min, self.car_edemand_max, self.ncars) - self.energy_remained
+        if self.car_edemand is None:
+            return np.random.uniform(self.car_edemand_min, self.car_edemand_max, self.ncars) - self.energy_remained
+        else:
+            return np.array(self.car_edemand) - self.energy_remained
 
     def read_buildingload(self, file):
         """
