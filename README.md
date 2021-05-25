@@ -49,4 +49,12 @@ Python 3.6+ is required. See also [requirements.txt](./requirements.txt) file.
 
 
 
+### Streamlit App
 
+The optimization code is also available as a streamlit app. To run the app:
+
+```shell
+streamlit run app.py
+```
+
+![](./images/Streamlit.png)
