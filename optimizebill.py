@@ -203,7 +203,7 @@ class electricbilloptimizer:
 
         Returns
         -------
-            np.array: d
+            np.array: ...
         """
         p0 = np.array([])
         for i in range(self.ncars):
@@ -213,17 +213,38 @@ class electricbilloptimizer:
         return p0
 
     def constraint(self, x, i):
+        """
+        Creates the energy constraint for a single car.
+
+        Returns
+        -------
+            np.array: a single value array.
+        """
         p = x[i * self.time_onsite:(i + 1) * self.time_onsite]
         peff = p * self.efficiency(p)
         return np.sum(peff) * self.bintohour - self.ecars[i]
 
     def generate_constraints(self):
+        """
+        Wrapper for the constraint. Creates the energy constraint for all cars.
+
+        Returns
+        -------
+            np.array: float array containing the constraints for all cars.
+        """
         constraints = ()
         for i in range(self.ncars):
             constraints = constraints + ({'type': 'eq', 'fun': partial(self.constraint, i=i)},)
         return constraints
 
     def generate_bounds(self):
+        """
+        Creates the bounds on the power
+
+        Returns
+        -------
+            tuple: array of tuples in the form ((min_power1, max_power2), ..., (minpowerN, max_powerN))
+        """
         return (((self.charger_min, self.charger_max),) * self.time_onsite) * self.ncars
 
     @timer
