@@ -31,7 +31,7 @@ class electricbilloptimizer:
     def __init__(self, ncars=4, charger_min=0., charger_max=7, trf_i1=36, trf_i2=64,
                  car_edemand_min=15, car_edemand_max=35, car_edemand=None, remaining_energy=5,
                  buildingload='./data/buildingload.csv', seed=41, ecars=None, arrival_time=40,
-                 departure_time=96, demand_cost=16, bintohour=0.25):
+                 departure_time=96, demand_cost=16, bintohour=0.25, seq_power_threshold=0):
         """
         Construct all the necessary atrributes for the bill optimizer.
 
@@ -68,6 +68,10 @@ class electricbilloptimizer:
             buildingload: str
                 Path to the building load csv file
             seed: int
+                Seed
+            seq_power_threshold: float
+                Sequential power threshold. The consecutive time bins cannot have power change greater than this value.
+
         """
         self.ncars = ncars
         self.charger_min = charger_min
@@ -86,6 +90,7 @@ class electricbilloptimizer:
         self.time_offsite1 = self.arrival_time
         self.time_offsite2 = self.bins - self.departure_time
         self.demand_cost = demand_cost
+        self.seq_power_threshold = seq_power_threshold
 
         self.buildingload = self.read_buildingload(buildingload)
         self.seed = seed
@@ -166,9 +171,27 @@ class electricbilloptimizer:
         """
         return np.where(p < 5, 0.7, 0.9)
 
+    def adjust_decision_variable(self, p):
+        """
+        Appends 0s to the decision variable p to match p's shape to that of building load.
+
+        Returns
+        """
+        if self.time_offsite1:
+            p = np.append(np.zeros(self.time_offsite1), p)
+        if self.time_offsite2:
+            p = np.append(p, np.zeros(self.time_offsite2))
+        return p
+
     def bill(self, p):
         """
         The electricity bill for a given day.
+
+        Input
+        -----
+            p: np.array
+                Decision variable array, power output at each time bin of all chargers. It does not include the unused
+                time bins (Time bins with zero power are not included).
 
         Returns
         -------
@@ -177,14 +200,10 @@ class electricbilloptimizer:
         bl = self.get_buildingload()
         tariff = self.customer_tariff()
 
-        p = p.reshape(-1, self.time_onsite).sum(0)
-        if self.time_offsite1:
-            p = np.append(np.zeros(self.time_offsite1), p)
-        if self.time_offsite2:
-            p = np.append(p, np.zeros(self.time_offsite2))
-
-        expr1 = p.reshape(-1, self.bins).sum(0) + bl
-        bill = (expr1 * tariff * self.bintohour).sum() + max(expr1) * self.demand_cost
+        p = p.reshape(-1, self.time_onsite).sum(0)  # sum over all cars.
+        p = self.adjust_decision_variable(p)  # add zero-power time bins to the decision variable.
+        expr1 = p + bl
+        bill = (expr1 * tariff).sum() * self.bintohour + max(expr1) * self.demand_cost
         return bill
 
     def get_bill(self):
@@ -199,11 +218,13 @@ class electricbilloptimizer:
 
     def make_initial_guess(self):
         """
-        Generate a flat initial guess for each charger for the problem's period of time.
+        Generates the initial guess values for the bill optimization problem.
+        TODO: Add the efficiency to the equation.
 
         Returns
         -------
-            np.array: ...
+            np.array: float array containing initial guess for the power output of all chargers.
+            shape = (Ncars * TimeBin)
         """
         p0 = np.array([])
         for i in range(self.ncars):
@@ -216,25 +237,50 @@ class electricbilloptimizer:
         """
         Creates the energy constraint for a single car.
 
+        Inputs
+        ------
+        x: decision variables array without the 0 part.
+        i: car index
+
         Returns
         -------
-            np.array: a single value array.
+            np.array: a single value array containing the energy demand equation.
         """
         p = x[i * self.time_onsite:(i + 1) * self.time_onsite]
         peff = p * self.efficiency(p)
         return np.sum(peff) * self.bintohour - self.ecars[i]
 
+    def constraint2(self, x, i, j):
+        """
+        Constrain the consecutive timebins not to vary more than a threshold value.
+
+        Inputs
+        ------
+            x: decision variables array without the 0 part.
+            i: car index
+            j: time index
+        """
+        p = x[i * self.time_onsite:(i + 1) * self.time_onsite]  # Car part
+        return self.seq_power_threshold - np.abs(p[j] - p[j + 1])  # Time part
+
     def generate_constraints(self):
         """
-        Wrapper for the constraint. Creates the energy constraint for all cars.
+        Wrapper for the constraint.
 
         Returns
         -------
             np.array: float array containing the constraints for all cars.
         """
         constraints = ()
+        # Energy demand constraint for all cars.
         for i in range(self.ncars):
             constraints = constraints + ({'type': 'eq', 'fun': partial(self.constraint, i=i)},)
+
+        # Sequential power chage constraint
+        if self.seq_power_threshold:
+            for i in range(self.ncars):
+                for j in range(self.time_onsite - 1):
+                    constraints = constraints + ({'type': 'ineq', 'fun': partial(self.constraint2, i=i, j=j)},)
         return constraints
 
     def generate_bounds(self):
@@ -260,6 +306,9 @@ class electricbilloptimizer:
         return self.res
 
     def plot_result(self, showplot=True):
+        """
+        Plots the power output of all chargers and the building load.
+        """
         converter = mdates.ConciseDateConverter()
         munits.registry[np.datetime64] = converter
 
@@ -271,10 +320,8 @@ class electricbilloptimizer:
         ps = {}
         ps['Buildingload'] = bl
 
-        # plt.figure(figsize=(9, 4))
         for i in range(self.ncars):
             label = 'Charger-' + str(i + 1)
-
             p = self.res.x[i * self.time_onsite: (i + 1) * self.time_onsite]
             if self.time_offsite1:
                 p = np.concatenate([np.zeros(self.time_offsite1), p])
@@ -296,6 +343,11 @@ class electricbilloptimizer:
             plt.show()
 
     def make_output(self):
+        """
+        Returns
+        -------
+            pd.dataframe: The optimized values of the decision variables, building load, and the timestamp.
+        """
         df1 = self.buildingload['Timestamp']
 
         data = self.res.x.reshape(self.ncars, -1)
@@ -309,6 +361,9 @@ class electricbilloptimizer:
         return df1
 
     def save_results(self):
+        """
+        Saves the optimized values of the decision variables, building load, and the timestamp into a csv file.
+        """
         if not os.path.isdir('./Results'):
             os.mkdir('./Results')
         df1 = self.make_output()
