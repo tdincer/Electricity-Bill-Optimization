@@ -45,7 +45,7 @@ The code writes the results in a file named dispatch.csv with the following head
 
 ### Requirements
 
-Python 3.6+ is required. See also [requirements.txt](./requirements.txt) file.
+Python 3.6 is required. See also [requirements.txt](./requirements.txt) file.
 
 
 
