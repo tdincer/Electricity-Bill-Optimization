@@ -5,7 +5,7 @@ The problem is to optimize the electricity bill of a customer with 4 electric ve
 The chargers are located behind the utility grade meter. The figure below depicts the site configuration.
 
 <p align="center">
-  <img src=./problem_img/siteconfiguration.png width="350" alt="accessibility text">
+  <img src=./images/siteconfiguration.png width="350" alt="accessibility text">
 </p>
 
 
