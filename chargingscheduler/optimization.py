@@ -382,7 +382,9 @@ class BillOptimizer:
         fmt_half_year = mdates.HourLocator(interval=2)
         ax.xaxis.set_major_locator(fmt_half_year)
 
-        plt.savefig("../results/results.png", format="png", dpi=300)
+        plt.savefig(
+            (root_dir / "results/results.png").as_posix(), format="png", dpi=300
+        )
         if showplot:
             plt.show()
 
@@ -413,10 +415,10 @@ class BillOptimizer:
         """
         Saves the optimized values of the decision variables, building load, and the timestamp into a csv file.
         """
-        if not os.path.isdir("../results"):
-            os.mkdir("../results")
+        if not os.path.isdir(root_dir.as_posix()):
+            os.mkdir(root_dir.as_posix())
         df1 = self.output2df()
-        df1.to_csv("../results/dispatch.csv", index=False)
+        df1.to_csv((root_dir / "results/dispatch.csv").as_posix(), index=False)
 
 
 @timer
