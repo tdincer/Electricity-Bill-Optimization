@@ -25,7 +25,7 @@ Given the problem setting above, what would be the power used in each charger fo
 
 ### Problem Formulation
 
-Problem formulation is available in the [formulation.pdf](./formulation.pdf) file.
+Problem formulation is available in the [formulation.pdf](./doc/formulation.pdf) file.
 
 
 
@@ -39,7 +39,7 @@ python3 optimizebill.py
 
 The code writes the results in a file named dispatch.csv with the following headers: *Timestamp, Charger1[kW], Charger2[kW], Charger3[kW], Charger4[kW]*. It also plots the results as shown below:
 
-![](./Results/Results.png)
+![](./results/Results.png)
 
 
 
