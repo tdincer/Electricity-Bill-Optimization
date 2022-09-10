@@ -41,7 +41,7 @@ class BillOptimizer:
         charger_max=7,
         trf_i1=36,
         trf_i2=64,
-        car_edemand_min=0,
+        car_edemand_min=15,
         car_edemand_max=35,
         car_edemand=None,
         energy_remained=5,
@@ -382,7 +382,7 @@ class BillOptimizer:
         fmt_half_year = mdates.HourLocator(interval=2)
         ax.xaxis.set_major_locator(fmt_half_year)
 
-        plt.savefig("./Results/Results.png", format="png", dpi=300)
+        plt.savefig("../results/results.png", format="png", dpi=300)
         if showplot:
             plt.show()
 
@@ -413,10 +413,10 @@ class BillOptimizer:
         """
         Saves the optimized values of the decision variables, building load, and the timestamp into a csv file.
         """
-        if not os.path.isdir("./Results"):
-            os.mkdir("./Results")
+        if not os.path.isdir("../results"):
+            os.mkdir("../results")
         df1 = self.output2df()
-        df1.to_csv("./Results/dispatch.csv", index=False)
+        df1.to_csv("../results/dispatch.csv", index=False)
 
 
 @timer
