@@ -65,7 +65,9 @@ with st.sidebar.form(key="columns_in_form"):
 
 
 period = st.sidebar.slider(
-    "Charging Period:", max_value=time(23, 45), value=(time(10, 00), time(23, 45))
+    "Charging Period:",
+    max_value=time(23, 45),
+    value=(time(10, 00), time(23, 45)),
 )
 period_min = int((period[0].hour + period[0].minute / 60) / 0.25)
 period_max = int((period[1].hour + period[1].minute / 60) / 0.25 + 1)

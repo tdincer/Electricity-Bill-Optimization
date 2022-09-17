@@ -238,7 +238,9 @@ class BillOptimizer:
             p
         )  # add zero-power time bins to the decision variable.
         expr1 = p + bl
-        bill = (expr1 * tariff).sum() * self.bintohour + max(expr1) * self.demand_cost
+        bill = (expr1 * tariff).sum() * self.bintohour + max(
+            expr1
+        ) * self.demand_cost
         return bill
 
     def get_bill(self):
@@ -318,7 +320,10 @@ class BillOptimizer:
             for i in range(self.ncars):
                 for j in range(self.time_onsite - 1):
                     constraints = constraints + (
-                        {"type": "ineq", "fun": partial(self.constraint2, i=i, j=j)},
+                        {
+                            "type": "ineq",
+                            "fun": partial(self.constraint2, i=i, j=j),
+                        },
                     )
         return constraints
 
@@ -330,7 +335,9 @@ class BillOptimizer:
         -------
             tuple: array of tuples in the form ((min_power1, max_power2), ..., (minpowerN, max_powerN))
         """
-        return (((self.charger_min, self.charger_max),) * self.time_onsite) * self.ncars
+        return (
+            ((self.charger_min, self.charger_max),) * self.time_onsite
+        ) * self.ncars
 
     @timer
     def optimize(self, verbose=False):
@@ -406,7 +413,8 @@ class BillOptimizer:
                 [data, np.zeros((self.ncars, self.time_offsite2))], axis=1
             )
         df2 = pd.DataFrame(
-            data.T, columns=["Charger{}[kW]".format(i + 1) for i in range(self.ncars)]
+            data.T,
+            columns=["Charger{}[kW]".format(i + 1) for i in range(self.ncars)],
         )
         df1 = pd.concat([df1, df2], axis=1)
         return df1
@@ -438,7 +446,9 @@ if __name__ == "__main__":
         default=False,
         help="Plot the power used by each component.",
     )
-    parser.add_argument("-nc", "--ncars", type=int, default=4, help="Number of cars.")
+    parser.add_argument(
+        "-nc", "--ncars", type=int, default=4, help="Number of cars."
+    )
     parser.add_argument(
         "-s",
         "--seed",
