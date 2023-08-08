@@ -27,26 +27,8 @@ def plot_components(df, placeholder):
 
 
 st.set_page_config(layout="wide")
-st.markdown(
-    """
-    <style>
-    [data-testid="stSidebar"][aria-expanded="true"] > div:first-child {
-        width: 400px;
-    }
-    [data-testid="stSidebar"][aria-expanded="false"] > div:first-child {
-        width: 400px;
-        margin-left: -400px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
 
 st.title("EV Charging: Bill Optimizer")
-st.markdown(
-    """
-"""
-)
 
 # Sidebar
 st.sidebar.markdown("## Input Parameters")
@@ -60,7 +42,7 @@ with st.sidebar.form(key="columns_in_form"):
     np.random.seed(15)
     edemand = np.round(np.random.uniform(15, 35, ncars), 1)
     for i, col in enumerate(cols):
-        edemand[i] = cols[i].text_input(label="Vehicle " + str(i + 1), value=edemand[i])
+        edemand[i] = cols[i].text_input(label="EV " + str(i + 1), value=edemand[i])
     submitted = st.form_submit_button("Submit")
 
 

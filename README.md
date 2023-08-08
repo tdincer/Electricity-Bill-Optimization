@@ -25,7 +25,7 @@ Given the problem setting above, what would be the power used in each charger fo
 
 ### Problem Formulation
 
-Problem formulation is available in the [formulation.pdf](./doc/formulation.pdf) file.
+Problem formulation is available in the [formulation.pdf](./docs/formulation.pdf) file.
 
 
 
@@ -45,7 +45,7 @@ The code writes the results in a file named dispatch.csv with the following head
 
 ### Requirements
 
-Python 3.6 is required. See also [requirements.txt](./requirements.txt) file.
+Python 3.6 or greater is required. See also [requirements.txt](./requirements.txt) file.
 
 
 
